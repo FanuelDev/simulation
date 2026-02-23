@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Parcours Intégré – GUFORD</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f0f4f8;
+    color: #1a3a5c;
+    padding: 32px;
+  }
+  header {
+    background: linear-gradient(135deg, #0d2b45 0%, #1a3a5c 60%, #2e6da4 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 28px 36px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(13,43,69,0.25);
+  }
+  header h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: 0.5px; }
+  header p { font-size: 0.85rem; opacity: 0.8; margin-top: 4px; }
+  .badge {
+    background: rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+    background: white;
+    border-radius: 10px;
+    padding: 16px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+  .dot {
+    width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0;
+  }
+  .diagram-wrapper {
+    background: white;
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+    overflow-x: auto;
+  }
+  .mermaid { min-width: 100%; }
+  footer {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 0.75rem;
+    color: #7a9bbf;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Parcours Intégré Digital — BAD · VBS · Assurance</h1>
+    <p>Import Consommation · Import Transit · Export · Sinistres Marchandise et Automobile</p>
+  </div>
+  <div class="badge">GUFORD</div>
+</header>
+
+<div class="legend">
+  <div class="legend-item"><div class="dot" style="background:#1a3a5c"></div> GUFORD (Hub central)</div>
+  <div class="legend-item"><div class="dot" style="background:#2e6da4"></div> BAD (Dédouanement)</div>
+  <div class="legend-item"><div class="dot" style="background:#27a05b"></div> VBS (Enlèvement)</div>
+  <div class="legend-item"><div class="dot" style="background:#e07b00"></div> Assurance</div>
+  <div class="legend-item"><div class="dot" style="background:#c0392b"></div> Sinistre</div>
+  <div class="legend-item"><div class="dot" style="background:#7b4fa6"></div> Transit / Export</div>
+  <div class="legend-item"><div class="dot" style="background:#f0a500"></div> Point de décision</div>
+</div>
+
+<div class="diagram-wrapper">
+  <div class="mermaid">
+%%{init: {'theme': 'base', 'themeVariables': {
+  'primaryColor': '#e8f4fd',
+  'primaryTextColor': '#1a3a5c',
+  'primaryBorderColor': '#2e6da4',
+  'lineColor': '#2e6da4',
+  'secondaryColor': '#f0f8ff',
+  'tertiaryColor': '#fefefe',
+  'edgeLabelBackground': '#ffffff',
+  'fontSize': '13px'
+}}}%%
+flowchart TD
+
+    classDef platform fill:#1a3a5c,color:#fff,stroke:none
+    classDef step     fill:#f5f9fe,color:#1a3a5c,stroke:#b8d4ed,stroke-width:1.5
+    classDef stepVbs  fill:#f0fff4,color:#0d3a1f,stroke:#27a05b,stroke-width:1.5
+    classDef stepAss  fill:#fff8ec,color:#5c3000,stroke:#e07b00,stroke-width:1.5
+    classDef stepSin  fill:#fff0f0,color:#5c0d0d,stroke:#c0392b,stroke-width:1.5
+    classDef stepTr   fill:#f5eeff,color:#2a004a,stroke:#7b4fa6,stroke-width:1.5
+    classDef decision fill:#f0a500,color:#fff,stroke:none
+    classDef section  fill:#0d2b45,color:#fff,stroke:none
+
+    %% ── ENTREE ──
+    START([Arrivee Marchandise au Port]):::section
+
+    %% ── TYPES MARCHANDISES ──
+    subgraph TYPES["Types de Marchandises et Regimes"]
+        direction LR
+        T1([Vracs Solides]):::decision
+        T2([Conteneurs et Frigo]):::decision
+        T3([Vehicules Occasion]):::decision
+    end
+
+    %% ════════════════════════════════════════════
+    %% CHAINE IMPORT – CONSOMMATION
+    %% ════════════════════════════════════════════
+
+    %% ── BAD CONSOMMATION ──
+    subgraph BAD["BAD — DEDOUANEMENT IMPORT CONSOMMATION"]
+        direction TB
+        B1["1 - Localisation cargaison\nTransitaire - GUFORD\nNBL ou N Conteneur vers Position cargaison"]:::step
+        B2["2 - Facture echange connaissement\nTransitaire - GUFORD\nNBL, type et lieu depotage vers Facture"]:::step
+        B3["3 - Paiement echange connaissement\nTransitaire - OSIPAYE via GUFORD\nMontant vers Recu de paiement"]:::step
+        B4["4 - Bon a Delivrer BAD\nTransitaire - GUFORD vers Consignataire\nNBL, Code GUCE, Nom navire vers BAD"]:::step
+        B5["5 - Declaration Douaniere DDU\nTransitaire - SYDONIA via GUFORD\nBL, BAD, Facture fournisseur vers DDU"]:::step
+        B6["6 - Liquidation DDU\nTransitaire - SYDONIA OTR\nDocs pre-dedouanement vers DDU Liquidee"]:::step
+        B7["7 - Transmission ANTASER\nTransitaire - ANTASER via GUFORD\nBL, BAD, DDU, BESC vers Enregistrement"]:::step
+        B8["8 - Facture Port PAL\nTransitaire - SIP PAL via GUFORD\nBL, BAD, DDU vers Facture port"]:::step
+        B9["9 - Facture Manutentionnaire\nTransitaire - Manutentionnaire via GUFORD\nBL, BAD, DDU Liquide vers Facture manut."]:::step
+        B10["10 - Declaration GUCE et DFU\nTransitaire - GUCE via GUFORD\nBL, BAD, DDU Liquide vers DFU emis"]:::step
+        B11["11 - Paiement Manutentionnaire\nTransitaire - OSIPAYE via GUFORD\nFacture vers Recu de paiement"]:::step
+        B12["12 - Paiement DFU\nTransitaire - Banque ou Mobile Money\nN DFU, Infos payeur vers Notif. paiement"]:::step
+        B13["13 - Bon a Enlever BAE\nTransitaire - SYDONIA OTR via GUFORD\nDDU, Bulletin, BAD, BL vers BAE"]:::step
+
+        B1 --> B2 --> B3 --> B4 --> B5 --> B6 --> B7
+        B7 --> B8 --> B9 --> B10 --> B11 --> B12 --> B13
+    end
+
+    %% ── VBS CONSOMMATION ──
+    subgraph VBS["VBS — ENLEVEMENT ET TRANSPORT CONSOMMATION"]
+        direction TB
+        V1["14 - Declaration de fret\nTransitaire - GUFORD\nBL, DDU, BAE, BAD vers Notif. validation"]:::stepVbs
+        V2["15 - Validation repartition fret\nBureau de fret - GUFORD\nRepartition camions togolais vers Notif."]:::stepVbs
+        V3["16 - Declaration des camions\nTransporteur - GUFORD\nCarte grise, assurance, permis, photos, pesee"]:::stepVbs
+        V4["17 - Validation declaration camions\nBureau de fret - GUFORD\nFiche declaration vers Notif. validation"]:::stepVbs
+        V5["18 - Affretement des camions\nGroupement Transporteurs - GUFORD\nFiche affretement vers Liste camions et tours"]:::stepVbs
+        V6["19 - Pesage camion a vide\nTransitaire et Transporteur - GUFORD\nDonnees camion vers Passage pesage"]:::stepVbs
+        V7["20 - Generation Bon de Chargement\nBureau de fret - GUFORD\nTonnage, Camion, RDV vers Bon et QR Code"]:::stepVbs
+        V8["21 - Paiement Bon de Chargement\nTransporteur - OSIPAYE via GUFORD\nBon de chargement vers Recu de paiement"]:::stepVbs
+        V9["22 - Telechargement Bon de Chargement\nTransporteur - GUFORD\nBon electronique stocke espace client"]:::stepVbs
+        V10["23 - Demande RDV enlevement fret\nTransitaire - GUFORD vers Manutentionnaire\nPlage horaire, site vers RDV en attente"]:::stepVbs
+        V11["24 - Confirmation RDV\nManutentionnaire - GUFORD\nDate et heure vers RDV confirme"]:::stepVbs
+        V12["25 - Bon Entree Port\nPort Direction Exploitation - GUFORD\nInfos fret, immatriculation vers Bon entree"]:::stepVbs
+        V13["26 - Paiement Bon Entree Port\nTransitaire - OSIPAYE via GUFORD\nLien paiement vers Recu et Notif. RDV"]:::stepVbs
+        V14["27 - Entree Port - Verification QR Code\nAgents Exploitation - GUFORD\nBon QR, Bon entree vers Notif. validee"]:::stepVbs
+        V15["28 - Chargement camion\nManutentionnaire - GUFORD\nBon chargement, donnees fret vers Notif."]:::stepVbs
+        V16["29 - Sortie du Port\nAgent Exploitation - GUFORD\nBon QR vers Notif. sortie validee"]:::stepVbs
+        V17["30 - Pesage camion charge\nConcessionnaire site pesage - GUFORD\nPoids pont bascule vers Notif. pesee"]:::stepVbs
+        V18["31 - Depart camion\nChauffeur - GUFORD\nDocuments valides vers Notif. depart"]:::stepVbs
+
+        V1 --> V2 --> V3 --> V4 --> V5 --> V6 --> V7
+        V7 --> V8 --> V9 --> V10 --> V11 --> V12 --> V13
+        V13 --> V14 --> V15 --> V16 --> V17 --> V18
+    end
+
+    %% ── ASSURANCE MARCHANDISE ──
+    subgraph ASS_M["ASSURANCE MARCHANDISE - etapes 1 a 8"]
+        direction TB
+        AM1["1 - Demande assurance\nDeclarant - GUFORD vers Plateforme Assureur\nNBL, nature, description, poids, port depart\nport arrivee, nom navire, assureur choisi\ntype assurance, valeur, date expedition\nquantite, autres infos BL vers Notif. reception"]:::stepAss
+        AM2["2 - Traitement de la demande\nAssureur - Plateforme Assureur\nType tarif, statut vers Notification"]:::stepAss
+        AM3["3 - Etablissement cotation - Proposition prime\nAssureur - Plateforme Assureur\nMontant TTC, commentaire\ndoc proposition prime vers Notification"]:::stepAss
+        AM4["4 - Traitement de la proposition\nDeclarant - GUFORD\nStatut accepte ou refuse vers Notification"]:::stepAss
+        AM5["5 - Etablissement de la facture\nAssureur - Plateforme Assureur\nMontant a payer, commentaire\ndoc facture vers Notification"]:::stepAss
+        AM6["6 - Traitement de la facture\nDeclarant - GUFORD\nStatut vers Notification"]:::stepAss
+        AM7["7 - Paiement de la prime\nDeclarant - OSIPAYE via GUFORD\nMontant a payer vers Certificat assurance\net Recu de paiement"]:::stepAss
+        AM8["8 - Emission documents finaux\nAssureur - Plateforme Assureur\nN police, documents finaux vers\nConditions generales et particulieres"]:::stepAss
+
+        AM1 --> AM2 --> AM3 --> AM4 --> AM5 --> AM6 --> AM7 --> AM8
+    end
+
+    %% ── ASSURANCE AUTOMOBILE ──
+    subgraph ASS_A["ASSURANCE AUTOMOBILE - Vehicules Occasion - etapes 9 a 16"]
+        direction TB
+        AA1["9 - Demande assurance automobile\nDeclarant - GUFORD vers Plateforme Assureur\nNom prenom, ville, quartier, usage\ndate debut police, date fin police, assureur\ncarte grise origine, certif. evaluation\nattestation douane vers Notif. reception"]:::stepAss
+        AA2["10 - Traitement de la demande\nAssureur - Plateforme Assureur\nStatut vers Notification"]:::stepAss
+        AA3["11 - Etablissement cotation - Proposition prime\nAssureur - Plateforme Assureur\nMontant TTC, commentaire\ndoc proposition prime vers Notification"]:::stepAss
+        AA4["12 - Traitement de la proposition\nDeclarant - GUFORD\nStatut vers Notification"]:::stepAss
+        AA5["13 - Etablissement de la facture\nAssureur - Plateforme Assureur\nMontant a payer, commentaire\ndoc facture vers Notification"]:::stepAss
+        AA6["14 - Traitement de la facture\nDeclarant - GUFORD\nStatut vers Notification"]:::stepAss
+        AA7["15 - Paiement de la prime\nDeclarant - OSIPAYE via GUFORD\nMontant a payer vers Recu de paiement"]:::stepAss
+        AA8["16 - Emission documents finaux\nAssureur - Plateforme Assureur\nN police, documents finaux vers\nCarte Jaune, Carte CEDEAO\nConditions generales et particulieres"]:::stepAss
+
+        AA1 --> AA2 --> AA3 --> AA4 --> AA5 --> AA6 --> AA7 --> AA8
+    end
+
+    %% ── SINISTRE MARCHANDISE ──
+    subgraph SIN_M["DECLARATION SINISTRE MARCHANDISE - etapes 17 a 28"]
+        direction TB
+        SM1["17 - Declaration sinistre marchandise\nDeclarant - GUFORD\nN certificat, date, lieu, circonstance\ndescription pertes, photos, rapport PV\nfactures commerciales, etat des pertes\nAlerte si delai declaration superieur a 5 jours"]:::stepSin
+        SM2["18 - Traitement de la declaration\nAssureur - Plateforme Assureur\nStatut vers Notification"]:::stepSin
+        SM3["19 - Accuse de reception\nAssureur - Plateforme Assureur\nDoc accuse de reception\nCommentaire vers Notification"]:::stepSin
+        SM4["20 - Validation accuse de reception\nDeclarant - GUFORD\nStatut vers Notification"]:::stepSin
+        SM5["21 - Transmission rapport de constat\nDeclarant - GUFORD\nPV police ou gendarmerie\nPV huissier, rapport police"]:::stepSin
+        SM6["22 - Traitement des documents emis\nAssureur - Plateforme Assureur\nStatut, commentaire expertise si requise"]:::stepSin
+        DEC_SM{Expertise\nrequise ?}:::decision
+        SM7["23 - Notification et designation expert\nAssureur - Plateforme Assureur\nCommentaire vers Notification"]:::stepSin
+        SM8["24 - Emission proposition offre\nAssureur - Plateforme Assureur\nDoc proposition offre par courriel"]:::stepSin
+        DEC_ACC{Declarant\naccepte ?}:::decision
+        SM9A["25a - Validation offre\nDeclarant - GUFORD\nStatut accepte"]:::stepSin
+        SM9B["25b - Refus offre\nDeclarant - GUFORD\nStatut refuse, motif\nContre-expertise a charge assure"]:::stepSin
+        SM10["26 - Choix mode de reglement\nDeclarant - GUFORD\nMode reglement, RIB"]:::stepSin
+        SM11["27 - Fourniture preuve reglement\nAssureur - Plateforme\nFichiers de preuves"]:::stepSin
+        SM12["28 - Cloture declaration\nAssureur - Plateforme\nDate retrait cheque ou date virement"]:::stepSin
+
+        SM1 --> SM2 --> SM3 --> SM4 --> SM5 --> SM6 --> DEC_SM
+        DEC_SM -->|Oui| SM7 --> SM8
+        DEC_SM -->|Non| SM8
+        SM8 --> DEC_ACC
+        DEC_ACC -->|Accepte| SM9A --> SM10
+        DEC_ACC -->|Refuse| SM9B
+        SM10 --> SM11 --> SM12
+    end
+
+    %% ── SINISTRE AUTOMOBILE ──
+    subgraph SIN_A["DECLARATION SINISTRE AUTOMOBILE - etapes 29 a 40"]
+        direction TB
+        SA1["29 - Declaration sinistre automobile\nDeclarant - GUFORD\nN attestation, nom prenom age conducteurs A et B\nprovenance et destination vehicules A et B\nnbre personnes, adresse expertise, desc degats\ninfos adversaire, assureur tiers, n police\nAlerte si delai declaration superieur a 5 jours\nPhotos degats et main courante"]:::stepSin
+        SA2["30 - Traitement de la declaration\nAssureur - Plateforme Assureur\nStatut vers Notification"]:::stepSin
+        SA3["31 - Accuse de reception\nAssureur - Plateforme Assureur\nDoc accuse de reception, commentaire\nAttestation de declaration"]:::stepSin
+        SA4["32 - Validation accuse de reception\nDeclarant - GUFORD\nStatut vers Notification"]:::stepSin
+        SA5["33 - Emission rapport de constat\nDeclarant - GUFORD\nPV police ou gendarmerie\nPV huissier, rapport police"]:::stepSin
+        SA6["34 - Traitement des documents emis\nAssureur - Plateforme Assureur\nStatut, commentaire expertise si requise"]:::stepSin
+        DEC_SA{Expertise\nrequise ?}:::decision
+        SA7["35 - Notification expertise\nAssureur - Plateforme\nCommentaire vers Notification"]:::stepSin
+        SA8["36 - Emission proposition offre\nAssureur - Plateforme Assureur\nDoc proposition offre par courriel"]:::stepSin
+        DEC_SAO{Declarant\naccepte ?}:::decision
+        SA9A["37a - Validation offre\nDeclarant - GUFORD\nStatut accepte"]:::stepSin
+        SA9B["37b - Refus offre\nDeclarant - GUFORD\nStatut refuse, motif\nContre-expertise a charge assure"]:::stepSin
+        SA10["38 - Choix mode de reglement\nDeclarant - GUFORD\nMode reglement, RIB"]:::stepSin
+        SA11["39 - Fourniture preuve reglement\nAssureur - Plateforme\nFichiers de preuves"]:::stepSin
+        SA12["40 - Cloture declaration\nAssureur - Plateforme\nDate retrait cheque ou date virement"]:::stepSin
+
+        SA1 --> SA2 --> SA3 --> SA4 --> SA5 --> SA6 --> DEC_SA
+        DEC_SA -->|Oui| SA7 --> SA8
+        DEC_SA -->|Non| SA8
+        SA8 --> DEC_SAO
+        DEC_SAO -->|Accepte| SA9A --> SA10
+        DEC_SAO -->|Refuse| SA9B
+        SA10 --> SA11 --> SA12
+    end
+
+    %% ════════════════════════════════════════════
+    %% CHAINE IMPORT – TRANSIT
+    %% ════════════════════════════════════════════
+
+    subgraph TRANSIT["CHAINE IMPORT TRANSIT"]
+        direction TB
+
+        subgraph BAD_T["BAD — DEDOUANEMENT TRANSIT"]
+            direction TB
+            BT1["1 - Localisation cargaison\nTransitaire - GUFORD\nNBL vers Position cargaison"]:::stepTr
+            BT2["2 - Facture echange connaissement\nTransitaire - GUFORD\nNBL vers Facture"]:::stepTr
+            BT3["3 - Paiement echange connaissement\nTransitaire - OSIPAYE via GUFORD\nMontant vers Recu"]:::stepTr
+            BT4["4 - Bon a Delivrer BAD\nTransitaire - GUFORD vers Consignataire\nNBL, Code GUCE vers BAD"]:::stepTr
+            BT5["5 - DDU Transit\nTransitaire - SYDONIA via GUFORD\nBL, BAD, Facture vers DDU Transit"]:::stepTr
+            BT6["6 - Liquidation DDU Transit\nTransitaire - SYDONIA OTR\nDocs vers DDU Liquidee"]:::stepTr
+            BT7["7 - Transmission ANTASER\nTransitaire - ANTASER via GUFORD\nBL, BAD, DDU, BESC"]:::stepTr
+            BT8["8 - Facture Port PAL\nTransitaire - SIP PAL via GUFORD\nBL, BAD, DDU vers Facture port"]:::stepTr
+            BT9["9 - Facture et Paiement Manutentionnaire\nTransitaire - OSIPAYE via GUFORD\nFactures vers Recus"]:::stepTr
+            BT10["10 - Paiement frais portuaires\nTransitaire - OSIPAYE via GUFORD\nFactures vers Recus"]:::stepTr
+            BT11["11 - Bon a Enlever Transit BAE-T\nTransitaire - SYDONIA OTR via GUFORD\nDDU, Bulletin, BAD, BL vers BAE Transit"]:::stepTr
+
+            BT1 --> BT2 --> BT3 --> BT4 --> BT5 --> BT6
+            BT6 --> BT7 --> BT8 --> BT9 --> BT10 --> BT11
+        end
+
+        subgraph VBS_T["VBS — TRANSIT SORTIE TERRITOIRE"]
+            direction TB
+            VT1["12 - Declaration fret transit\nTransitaire - GUFORD\nBL, DDU, BAE vers Notif. fret"]:::stepTr
+            VT2["13 - Validation et Affretement camions\nBureau de fret - GUFORD\nFiche affretement vers Liste camions"]:::stepTr
+            VT3["14 - Declaration et Validation camions\nTransporteur et Bureau fret - GUFORD\nDocs vehicule vers Notif. validation"]:::stepTr
+            VT4["15 - Pesage vide et Bon Chargement\nBureau de fret - GUFORD\nDonnees vers Bon Chargement et QR Code"]:::stepTr
+            VT5["16 - Paiement et Telechargement BC\nTransporteur - OSIPAYE via GUFORD\nBC vers Recu et BC electronique"]:::stepTr
+            VT6["17 - RDV et Bon Entree Port\nTransitaire - GUFORD vers Manutentionnaire\nPlage horaire vers RDV confirme et Bon entree"]:::stepTr
+            VT7["18 - Entree Port et Chargement\nAgents Port et Manutentionnaire - GUFORD\nQR Code vers Notif. entree et chargement"]:::stepTr
+            VT8["19 - Sortie Port et Pesage charge\nAgent Exploitation et Concessionnaire\nQR vers Notif. sortie et pesee enregistree"]:::stepTr
+            VT9["20 - Suivi itineraire transit\nDouanes OTR - GUFORD et SYDONIA\nPosition camion vers Jalons passage frontiere"]:::stepTr
+            VT10["21 - Decharge transit\nDouane destination - SYDONIA\nDocs transit vers Decharge apuree"]:::stepTr
+
+            VT1 --> VT2 --> VT3 --> VT4 --> VT5
+            VT5 --> VT6 --> VT7 --> VT8 --> VT9 --> VT10
+        end
+
+        subgraph ASS_T["ASSURANCE TRANSIT"]
+            direction TB
+            AT1["1 - Demande assurance transit\nDeclarant - GUFORD vers Plateforme Assureur\nNBL, nature, poids, ports, navire, type\nvaleur assurance, destination finale transit"]:::stepTr
+            AT2["2 - Traitement et Proposition prime\nAssureur - Plateforme Assureur\nMontant TTC vers Acceptation ou Refus"]:::stepTr
+            AT3["3 - Paiement de la prime\nDeclarant - OSIPAYE via GUFORD\nMontant vers Certificat assurance transit"]:::stepTr
+            AT4["4 - Emission documents finaux\nAssureur - Plateforme Assureur\nN police, docs vers Conditions gales et partic."]:::stepTr
+
+            AT1 --> AT2 --> AT3 --> AT4
+        end
+
+        BT11 -->|BAE Transit obtenu| VTS_LINK[ ]
+        VTS_LINK --> VT1
+        VT10 -->|Marchandise acheminee| AT1
+    end
+
+    %% ════════════════════════════════════════════
+    %% CHAINE EXPORT
+    %% ════════════════════════════════════════════
+
+    subgraph EXPORT["CHAINE EXPORT — CONTENEURS"]
+        direction TB
+
+        subgraph BAD_E["BAD — DEDOUANEMENT EXPORT"]
+            direction TB
+            BE1["1 - Depot dossier export\nExportateur et Transitaire - GUFORD\nContrat vente, facture export, liste colisage"]:::stepTr
+            BE2["2 - Reservation espace navire\nTransitaire - GUFORD vers Consignataire\nNature, poids, destination vers Booking confirme"]:::stepTr
+            BE3["3 - Declaration Douaniere Export DDE\nTransitaire - SYDONIA via GUFORD\nFacture, liste colisage, booking vers DDE"]:::stepTr
+            BE4["4 - Visa et Liquidation DDE\nTransitaire - SYDONIA OTR\nDDE, docs vers DDE Visee et Mainlevee"]:::stepTr
+            BE5["5 - Facture Port PAL Export\nTransitaire - SIP PAL via GUFORD\nDDE, booking vers Facture port export"]:::stepTr
+            BE6["6 - Paiement frais portuaires\nTransitaire - OSIPAYE via GUFORD\nFacture vers Recu de paiement"]:::stepTr
+            BE7["7 - Bon a Embarquer BAE Export\nTransitaire - GUFORD vers Consignataire\nDDE Visee, paiements vers Bon a embarquer"]:::stepTr
+
+            BE1 --> BE2 --> BE3 --> BE4 --> BE5 --> BE6 --> BE7
+        end
+
+        subgraph VBS_E["VBS — ACHEMINEMENT ET EMBARQUEMENT EXPORT"]
+            direction TB
+            VE1["8 - Declaration fret export\nTransitaire - GUFORD\nDDE, BAE Export vers Fret enregistre"]:::stepTr
+            VE2["9 - Declaration et Validation camions\nTransporteur et Bureau fret - GUFORD\nDocs vehicule vers Notif. validation"]:::stepTr
+            VE3["10 - Bon Transport Export et QR Code\nBureau de fret - GUFORD\nTonnage, destination vers Bon transport"]:::stepTr
+            VE4["11 - Arrivee Port et Controle QR Code\nAgents Exploitation - GUFORD\nQR Code vers Entree validee"]:::stepTr
+            VE5["12 - Mise sous plombs douaniers\nDouanes OTR - SYDONIA\nDDE Visee, marchandise vers Scelle"]:::stepTr
+            VE6["13 - Chargement navire\nManutentionnaire - GUFORD\nBon a embarquer vers Chargement effectue"]:::stepTr
+            VE7["14 - Emission Connaissement BL Export\nConsignataire - GUFORD\nDonnees chargement vers BL Export transmis"]:::stepTr
+
+            VE1 --> VE2 --> VE3 --> VE4 --> VE5 --> VE6 --> VE7
+        end
+
+        BE7 -->|BAE Export obtenu| VES_LINK[ ]
+        VES_LINK --> VE1
+    end
+
+    %% ── PLATEFORMES ──
+    subgraph PLAT["Plateformes Interconnectees via GUFORD"]
+        direction LR
+        P1([GUFORD\nHub Central]):::platform
+        P2([SYDONIA OTR\nDouanes]):::platform
+        P3([ANTASER]):::platform
+        P4([OSIPAYE\nPaiements]):::platform
+        P5([GUCE]):::platform
+        P6([SIP PAL\nPort]):::platform
+        P1 -.->|API| P2
+        P1 -.->|API| P3
+        P1 -.->|API| P4
+        P1 -.->|API| P5
+        P1 -.->|API| P6
+    end
+
+    %% ── FLUX PRINCIPAL ──
+    START --> TYPES
+
+    TYPES -->|Consommation| BAD
+    BAD -->|BAE obtenu| VBS
+    VBS -->|Marchandise livree| ASS_M
+    ASS_M -->|Vehicule Occasion| ASS_A
+    ASS_M -.->|Sinistre marchandise| SIN_M
+    ASS_A -.->|Sinistre automobile| SIN_A
+    ASS_M --> FIN_CONSO([Livraison Import Consommation]):::section
+    SM12 --> FIN_CONSO
+    SA12 --> FIN_CONSO
+
+    TYPES -.->|Regime Transit| TRANSIT
+    AT4 --> FIN_TRANSIT([Sortie Territoire - Import Transit]):::section
+
+    TYPES -.->|Exportateur| EXPORT
+    VE7 --> FIN_EXP([Marchandise Embarquee - Export]):::section
+  </div>
+</div>
+
+<footer>
+  GUFORD / PAL · Assurance Transport Facultes Maritimes · Parcours Integre Digital · Import Consommation · Import Transit · Export · 2025
+</footer>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    flowchart: { curve: 'basis', htmlLabels: true, useMaxWidth: false },
+    themeVariables: {
+      primaryColor: '#e8f4fd',
+      primaryTextColor: '#1a3a5c',
+      primaryBorderColor: '#2e6da4',
+      lineColor: '#5a9fd4',
+      secondaryColor: '#f0f8ff',
+      fontSize: '13px'
+    }
+  });
+</script>
+</body>
+</html>
