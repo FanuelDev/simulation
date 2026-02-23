@@ -138,7 +138,7 @@ flowchart TD
         B5["5 - Declaration Douaniere DDU\nTransitaire - SYDONIA via GUFORD\nBL, BAD, Facture fournisseur vers DDU"]:::step
         B6["6 - Liquidation DDU\nTransitaire - SYDONIA OTR\nDocs pre-dedouanement vers DDU Liquidee"]:::step
         B7["7 - Transmission ANTASER\nTransitaire - ANTASER via GUFORD\nBL, BAD, DDU, BESC vers Enregistrement"]:::step
-        B8["8 - Facture Port PAL\nTransitaire - SIP PAL via GUFORD\nBL, BAD, DDU vers Facture port"]:::step
+        B8["8 - Facture Port PAL\nTransitaire - SIPE PAL via GUFORD\nBL, BAD, DDU vers Facture port"]:::step
         B9["9 - Facture Manutentionnaire\nTransitaire - Manutentionnaire via GUFORD\nBL, BAD, DDU Liquide vers Facture manut."]:::step
         B10["10 - Declaration GUCE et DFU\nTransitaire - GUCE via GUFORD\nBL, BAD, DDU Liquide vers DFU emis"]:::step
         B11["11 - Paiement Manutentionnaire\nTransitaire - OSIPAYE via GUFORD\nFacture vers Recu de paiement"]:::step
@@ -278,7 +278,7 @@ flowchart TD
             BT5["5 - DDU Transit\nTransitaire - SYDONIA via GUFORD\nBL, BAD, Facture vers DDU Transit"]:::stepTr
             BT6["6 - Liquidation DDU Transit\nTransitaire - SYDONIA OTR\nDocs vers DDU Liquidee"]:::stepTr
             BT7["7 - Transmission ANTASER\nTransitaire - ANTASER via GUFORD\nBL, BAD, DDU, BESC"]:::stepTr
-            BT8["8 - Facture Port PAL\nTransitaire - SIP PAL via GUFORD\nBL, BAD, DDU vers Facture port"]:::stepTr
+            BT8["8 - Facture Port PAL\nTransitaire - SIPE PAL via GUFORD\nBL, BAD, DDU vers Facture port"]:::stepTr
             BT9["9 - Facture et Paiement Manutentionnaire\nTransitaire - OSIPAYE via GUFORD\nFactures vers Recus"]:::stepTr
             BT10["10 - Paiement frais portuaires\nTransitaire - OSIPAYE via GUFORD\nFactures vers Recus"]:::stepTr
             BT11["11 - Bon a Enlever Transit BAE-T\nTransitaire - SYDONIA OTR via GUFORD\nDDU, Bulletin, BAD, BL vers BAE Transit"]:::stepTr
@@ -332,7 +332,7 @@ flowchart TD
             BE2["2 - Reservation espace navire\nTransitaire - GUFORD vers Consignataire\nNature, poids, destination vers Booking confirme"]:::stepTr
             BE3["3 - Declaration Douaniere Export DDE\nTransitaire - SYDONIA via GUFORD\nFacture, liste colisage, booking vers DDE"]:::stepTr
             BE4["4 - Visa et Liquidation DDE\nTransitaire - SYDONIA OTR\nDDE, docs vers DDE Visee et Mainlevee"]:::stepTr
-            BE5["5 - Facture Port PAL Export\nTransitaire - SIP PAL via GUFORD\nDDE, booking vers Facture port export"]:::stepTr
+            BE5["5 - Facture Port PAL Export\nTransitaire - SIPE PAL via GUFORD\nDDE, booking vers Facture port export"]:::stepTr
             BE6["6 - Paiement frais portuaires\nTransitaire - OSIPAYE via GUFORD\nFacture vers Recu de paiement"]:::stepTr
             BE7["7 - Bon a Embarquer BAE Export\nTransitaire - GUFORD vers Consignataire\nDDE Visee, paiements vers Bon a embarquer"]:::stepTr
 
@@ -364,7 +364,7 @@ flowchart TD
         P3([ANTASER]):::platform
         P4([OSIPAYE\nPaiements]):::platform
         P5([GUCE]):::platform
-        P6([SIP PAL\nPort]):::platform
+        P6([SIPE PAL\nPort]):::platform
         P1 -.->|API| P2
         P1 -.->|API| P3
         P1 -.->|API| P4
